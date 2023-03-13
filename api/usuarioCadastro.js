@@ -10,13 +10,14 @@ module.exports = (app) => {
     const signup = async (req, res) => {
         
         const usuario = { ...req.body };
-        const query=await app.database("usuario").where({email:usuario.email})
-
+        const query=await app.database("usuario").select("email").where({email:usuario.email})
+        //const query=await app.database("usuario").select("email").where("email","=",usuario.email)
+        const verifica=JSON.stringify(query)
 
         
 
         //verificar se já existe um email cadastrado
-        if(query) {
+        if(verifica!='[]') {
             return res.json({error: "Email já cadastrado"});
         }
         else{
@@ -24,7 +25,7 @@ module.exports = (app) => {
                 return res.status(400).json({ err: "Preencha os campos corretamente!"});
 
             }
-            else if(usuario.senha==usuario.confirma){
+            else if(usuario.senha!=usuario.confirma){
                 return res.status(400).json({ err: "Confirme a senha corretamente!"});
 
 
@@ -39,17 +40,9 @@ module.exports = (app) => {
 
     }
 
-    const login = async (req, res) => {
-        const usuario = { ...req.body };
-        const query1=await app.database("usuario").where({email:usuario.email});
-        const query2=await app.database("usuario").where({senha:usuario.senha});
-        
-        if(query1 && query2){
-            res.status(200).json({message: "Usuário logado com sucesso"});
-        }
-    }
+    
 
     
 
-    return { get, signup,login}
+    return { get, signup}
 }

@@ -11,13 +11,13 @@ module.exports = (app) => {
         
         const comercio = { ...req.body };
         
-        if(!usuario.nome ||!usuario.cpf || !usuario.rg || !usuario.cnpj || !usuario.endereco){
+        if(!comercio.nome ||!comercio.cpf || !comercio.rg || !comercio.cnpj || !comercio.endereco){
                 return res.status(400).json({ err: "Preencha os campos obrigatórios corretamente!"});
 
             }
         else{
                 await app.database("comercio")
-                .insert(usuario)
+                .insert(comercio)
                 .then(() => res.status(200).json({success: "comercio cadastrado com sucesso!"}))
                 .catch((err) => res.status(500).send(err));
             }
